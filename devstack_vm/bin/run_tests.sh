@@ -26,8 +26,8 @@ if [ $res -ne 0 ]; then
     exit $res
 fi
 
-testr run --subunit --parallel --load-list=$RUN_TESTS_LIST | subunit-2to1 > /home/ubuntu/tempest/subunit-output.log 2>&1
-cat /home/ubuntu/tempest/subunit-output.log | /opt/stack/tempest/tools/colorizer.py > /home/ubuntu/tempest/tempest-output.log 2>&1
+testr run --subunit --parallel --load-list=$RUN_TESTS_LIST | subunit-trace -n -f > /home/ubuntu/tempest/tempest-output.log 2>&1
+
 RET=$?
 cd /home/ubuntu/tempest/
 python /home/ubuntu/bin/subunit2html.py /home/ubuntu/tempest/subunit-output.log
