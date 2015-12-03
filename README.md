@@ -1,2 +1,2 @@
 # manila-ci
-Manila CI Repository
+Cloudbase Manila Windows SMB Driver CI Repository
