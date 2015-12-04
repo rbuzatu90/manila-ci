@@ -5,7 +5,8 @@ MANILA_SERVICE_SECGROUP="manila-service"
 NET_ID=$(neutron net-list | grep private | awk '{print $2}')
 neutron net-update --shared=True private
 
-nova secgroup-delete $MANILA_SERVICE_SECGROUP
+nova --os-username manila --os-tenant-name service --os-password Passw0rd \
+   secgroup-delete $MANILA_SERVICE_SECGROUP
 nova --os-username manila --os-tenant-name service --os-password Passw0rd \
    secgroup-create $MANILA_SERVICE_SECGROUP $MANILA_SERVICE_SECGROUP
 
