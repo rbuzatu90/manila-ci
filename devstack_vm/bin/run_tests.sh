@@ -39,6 +39,6 @@ cat $log_file | subunit-trace -n -f > $tempest_output_file 2>&1 || true
 cd /home/ubuntu/tempest/
 
 echo "Generating HTML report..."
-subunit2html $log_file $results_html_file
+python $basedir/subunit2html.py $log_file $results_html_file
 
 subunit-stats $log_file > $subunit_stats_file
