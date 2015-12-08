@@ -33,13 +33,14 @@ if [ $res -ne 0 ]; then
 fi
 
 testr run --subunit --parallel --load-list=$RUN_TESTS_LIST  > $log_file 2>&1
-RET=$?
 
 cat $log_file | subunit-trace -n -f > $tempest_output_file 2>&1 || true
 
 cd /home/ubuntu/tempest/
 
 echo "Generating HTML report..."
-python $basedir/subunit2html.py $log_file $results_html_file
+python subunit2html.py $log_file $results_html_file
 
-exit $RET
+subunit-stats $log_file > $subunit_stats_file
+
+exit $?
