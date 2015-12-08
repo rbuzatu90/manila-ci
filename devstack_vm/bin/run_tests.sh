@@ -42,5 +42,3 @@ echo "Generating HTML report..."
 subunit2html $log_file $results_html_file
 
 subunit-stats $log_file > $subunit_stats_file
-
-exit $?
