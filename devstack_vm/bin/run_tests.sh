@@ -42,5 +42,4 @@ cd /home/ubuntu/tempest/
 echo "Generating HTML report..."
 python $basedir/subunit2html.py $log_file $results_html_file
 
-python /home/ubuntu/bin/subunit2html.py /home/ubuntu/tempest/subunit-output.log
 exit $RET
