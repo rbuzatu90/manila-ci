@@ -361,7 +361,9 @@ function SetUserLogonAsServiceRights($UserName)
     $privilege = "SeServiceLogonRight"
     if (![PSCarbon.Lsa]::GetPrivileges($UserName).Contains($privilege))
     {
+	write-host "Changing privileges"
         [PSCarbon.Lsa]::GrantPrivileges($UserName, $privilege)
+        write-host "Done changing privileges"
     }
 }
 
@@ -386,10 +388,14 @@ Function Set-ServiceAcctCreds
     } else {
         $hostname = hostname
     }
-
+    write-host "Running SetUserLogonAsServiceRights $hostname\$serviceUsername"
     SetUserLogonAsServiceRights "$hostname\$serviceUsername"
-
+    write-host "Done SetUserLogonAsServiceRights $hostname\$serviceUsername"
+    
+    write-host "Running: $service.Change($null,$null,$null,$null,$null,$null,$hostname\$serviceUsername,$servicePassword)"
     $service.Change($null,$null,$null,$null,$null,$null,"$hostname\$serviceUsername",$servicePassword)
+    write-host "Done: $service.Change($null,$null,$null,$null,$null,$null,$hostname\$serviceUsername,$servicePassword)"
+
 }
 
 Function Check-Service
