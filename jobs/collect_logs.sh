@@ -63,4 +63,17 @@ ssh_cmd_logs_sv "tar -xzf $LOG_ARCHIVE_DIR/aggregate-logs.tar.gz -C $LOG_ARCHIVE
 echo "Fixing permissions on all log files"
 ssh_cmd_logs_sv "chmod a+rx -R $LOG_ARCHIVE_DIR"
 
+echo `date -u +%H:%M:%S` "Started cleaning iSCSI targets and portals"
+
+nohup python /home/jenkins-slave/tools/wsman.py -U https://$hyperv_node:5986/wsman -u $WIN_USER -p $WIN_PASS 'powershell $targets = gwmi -ns root/microsoft/windows/storage -class msft_iscsitarget; $ErrorActionPreference = "Continue"; $targets[0].update();' &
+pid_clean_targets_hyperv=$!
+
+nohup python /home/jenkins-slave/tools/wsman.py -U https://$hyperv_node:5986/wsman -u $WIN_USER -p $WIN_PASS  'powershell $targets = gwmi -ns root/microsoft/windows/storage -class msft_iscsitargetportal; foreach ($target in $targets) {$target.remove()}' &
+pid_clean_portals_hyperv=$!
+
+wait $pid_clean_portals_hyperv
+wait $pid_clean_targets_hyperv
+
+echo `date -u +%H:%M:%S` "Finished cleaning iSCSI targets and portals"
+
 set +x
