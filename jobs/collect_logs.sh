@@ -63,6 +63,10 @@ ssh_cmd_logs_sv "tar -xzf $LOG_ARCHIVE_DIR/aggregate-logs.tar.gz -C $LOG_ARCHIVE
 echo "Fixing permissions on all log files"
 ssh_cmd_logs_sv "chmod a+rx -R $LOG_ARCHIVE_DIR"
 
+#Checking the number of iSCSI targets and portals before clean-up
+python /home/jenkins-slave/tools/wsman.py -U https://$hyperv_node:5986/wsman -u $WIN_USER -p $WIN_PASS 'powershell $targets = gwmi -ns root/microsoft/windows/storage -class msft_iscsitarget; Write-Host "[PRE_CLEAN] $env:computername has $targets.count" iSCSI targets'
+python /home/jenkins-slave/tools/wsman.py -U https://$hyperv_node:5986/wsman -u $WIN_USER -p $WIN_PASS 'powershell $targets = gwmi -ns root/microsoft/windows/storage -class msft_iscsitargetportal; Write-Host "[PRE_CLEAN] $env:computername has $targets.count" iSCSI portals'
+
 echo `date -u +%H:%M:%S` "Started cleaning iSCSI targets and portals"
 
 nohup python /home/jenkins-slave/tools/wsman.py -U https://$hyperv_node:5986/wsman -u $WIN_USER -p $WIN_PASS 'powershell $targets = gwmi -ns root/microsoft/windows/storage -class msft_iscsitarget; $ErrorActionPreference = "Continue"; $targets[0].update();' &
@@ -75,5 +79,9 @@ wait $pid_clean_portals_hyperv
 wait $pid_clean_targets_hyperv
 
 echo `date -u +%H:%M:%S` "Finished cleaning iSCSI targets and portals"
+
+#Checking the number of iSCSI targets and portals after clean-up
+python /home/jenkins-slave/tools/wsman.py -U https://$hyperv_node:5986/wsman -u $WIN_USER -p $WIN_PASS 'powershell $targets = gwmi -ns root/microsoft/windows/storage -class msft_iscsitarget; Write-Host "[POST_CLEAN] $env:computername has $targets.count" iSCSI targets'
+python /home/jenkins-slave/tools/wsman.py -U https://$hyperv_node:5986/wsman -u $WIN_USER -p $WIN_PASS 'powershell $targets = gwmi -ns root/microsoft/windows/storage -class msft_iscsitargetportal; Write-Host "[POST_CLEAN] $env:computername has $targets.count" iSCSI portals'
 
 set +x
