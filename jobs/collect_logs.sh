@@ -84,4 +84,8 @@ echo `date -u +%H:%M:%S` "Finished cleaning iSCSI targets and portals"
 python /home/jenkins-slave/tools/wsman.py -U https://$hyperv_node:5986/wsman -u $WIN_USER -p $WIN_PASS 'powershell $targets = gwmi -ns root/microsoft/windows/storage -class msft_iscsitarget; Write-Host "[POST_CLEAN] $env:computername has $targets.count" iSCSI targets'
 python /home/jenkins-slave/tools/wsman.py -U https://$hyperv_node:5986/wsman -u $WIN_USER -p $WIN_PASS 'powershell $targets = gwmi -ns root/microsoft/windows/storage -class msft_iscsitargetportal; Write-Host "[POST_CLEAN] $env:computername has $targets.count" iSCSI portals'
 
+# Restarting MSiSCSI service 
+python /home/jenkins-slave/tools/wsman.py -U https://$hyperv_node:5986/wsman -u $WIN_USER -p $WIN_PASS 'powershell restart-service msiscsi; iscsicli listtargets; iscsicli listtargetportals'
+
+echo `date -u +%H:%M:%S`
 set +x
