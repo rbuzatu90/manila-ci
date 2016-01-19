@@ -108,6 +108,15 @@ cd /home/ubuntu/devstack
 
 ./unstack.sh
 
+#Fix for unproper ./unstack.sh
+screen_pid=$(ps auxw | grep -i screen | grep -v grep | awk '{print $2}')
+if [[ -n $screen_pid ]] 
+then
+    kill -9 $screen_pid
+    #In case there are "DEAD ????" screens, we remove them
+    screen -wipe
+fi
+
 # Workaround for the Nova API versions mismatch issue.
 # git revert 8349aff5abd26c63470b96e99ade0e8292a87e7a --no-edit
 
