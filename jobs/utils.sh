@@ -93,11 +93,12 @@ join_hyperv (){
     WIN_PASS=$2
     URL=$3
 
-    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\devstack\scripts\teardown.ps1"
     run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned Remove-Item -Recurse -Force c:\Openstack\manila-ci"
     run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "git clone -b cambridge https://github.com/cloudbase/manila-ci C:\Openstack\manila-ci"
+    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\teardown.ps1"
+    
     set -e
-    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\devstack\scripts\EnsureOpenStackServices.ps1 $WIN_USER $WIN_PASS"
+    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\EnsureOpenStackServices.ps1 $WIN_USER $WIN_PASS"
     run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\create-environment.ps1 -devstackIP $FIXED_IP"
 }
 
@@ -106,7 +107,7 @@ teardown_hyperv () {
     WIN_PASS=$2
     URL=$3
 
-    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\devstack\scripts\teardown.ps1"
+    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\teardown.ps1"
 }
 
 ensure_branch_supported () {
