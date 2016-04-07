@@ -3,26 +3,9 @@ Param(
     [string]$branchName='master'
 )
 
-$openstackDir = "C:\OpenStack"
-$baseDir = "$openstackDir\manila-ci\HyperV"
-$scriptdir = "$baseDir\scripts"
-$configDir = "C:\OpenStack\etc"
-$templateDir = "$baseDir\templates"
-$buildDir = "c:\OpenStack\build\openstack"
-$binDir = "$openstackDir\bin"
-$novaTemplate = "$templateDir\nova.conf"
-$neutronTemplate = "$templateDir\neutron_hyperv_agent.conf"
-$hostname = hostname
-$rabbitUser = "stackrabbit"
-$pythonDir = "C:\Python27"
-$pythonArchive = "python27new.tar.gz"
-$pythonTar = "python27new.tar"
-$pythonExec = "$pythonDir\python.exe"
-
-$openstackLogs="$openstackDir\Log"
-$remoteConfigs="\\"+$devstackIP+"\openstack\config"
-
-. "$scriptdir\utils.ps1"
+$scriptLocation = [System.IO.Path]::GetDirectoryName($myInvocation.MyCommand.Definition)
+. "$scriptLocation\config.ps1"
+. "$scriptLocation\utils.ps1"
 
 $hasNova = Test-Path $buildDir\nova
 $hasNeutron = Test-Path $buildDir\neutron

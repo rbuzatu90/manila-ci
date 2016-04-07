@@ -341,19 +341,17 @@ $ServiceChangeErrors.Add(22, "Status Invalid Service Account")
 $ServiceChangeErrors.Add(23, "Status Service Exists")
 $ServiceChangeErrors.Add(24, "Service Already Paused")
 
-$openstackDir = "C:\OpenStack"
-$virtualenv = "C:\Python27"
-$configDir = "$openstackDir\etc"
-$downloadLocation = "http://dl.openstack.tld/"
+$scriptLocation = [System.IO.Path]::GetDirectoryName($myInvocation.MyCommand.Definition)
+. "$scriptLocation\config.ps1"
 
 $novaServiceName = "nova-compute"
 $novaServiceDescription = "OpenStack nova Compute Service"
-$novaServiceExecutable = "$virtualenv\Scripts\nova-compute.exe"
+$novaServiceExecutable = "$pythonDir\Scripts\nova-compute.exe"
 $novaServiceConfig = "$configDir\nova.conf"
 
 $neutronServiceName = "neutron-hyperv-agent"
 $neutronServiceDescription = "OpenStack Neutron Hyper-V Agent Service"
-$neutronServiceExecutable = "$virtualenv\Scripts\neutron-hyperv-agent.exe"
+$neutronServiceExecutable = "$pythonDir\Scripts\neutron-hyperv-agent.exe"
 $neutronServiceConfig = "$configDir\neutron_hyperv_agent.conf"
 
 function SetUserLogonAsServiceRights($UserName)

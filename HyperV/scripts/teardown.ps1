@@ -1,6 +1,9 @@
 $baseDir = "c:\OpenStack"
 $buildDir = "$baseDir\build"
 
+$scriptLocation = [System.IO.Path]::GetDirectoryName($myInvocation.MyCommand.Definition)
+. "$scriptLocation\utils.ps1"
+
 $ErrorActionPreference = "SilentlyContinue"
 
 Write-Host "Stopping Nova and Neutron services"
@@ -55,4 +58,6 @@ Write-Host "Cleaning the config folder."
 Remove-Item -Recurse -Force $baseDir\etc\*
 Write-Host "Cleaning the Instances folder."
 Remove-Item -Recurse -Force $baseDir\Instances\*
+Write-Host "Cleaning eventlog"
+cleareventlog
 Write-Host "Cleaning up process finished."
