@@ -111,7 +111,6 @@ Add-Content "$env:APPDATA\pip\pip.ini" $pip_conf_content
 & pip install -U --pre pymi
 & pip install cffi
 & pip install numpy
-& pip install oslo.messaging==4.5.0
 popd
 
 $hasPipConf = Test-Path "$env:APPDATA\pip"
@@ -139,28 +138,29 @@ function cherry_pick($commit) {
 }
 
 ExecRetry {
-    & pip install C:\OpenStack\build\openstack\networking-hyperv
+    pushd $buildDir\networking-hyperv
+    & pip install $buildDir\networking-hyperv 
     if ($LastExitCode) { Throw "Failed to install networking-hyperv from repo" }
     popd
 }
 
 ExecRetry {
-    pushd C:\OpenStack\build\openstack\neutron
-    & pip install C:\OpenStack\build\openstack\neutron
+    pushd $buildDir\neutron
+    & pip install $buildDir\neutron
     if ($LastExitCode) { Throw "Failed to install neutron from repo" }
     popd
 }
 
 ExecRetry {
-    pushd C:\OpenStack\build\openstack\nova
-    # end of cherry-pick
-    & pip install C:\OpenStack\build\openstack\nova
+    pushd $buildDir\nova
+    & pip install $buildDir\nova
     if ($LastExitCode) { Throw "Failed to install nova fom repo" }
     popd
 }
 
 ExecRetry {
-    & pip install C:\OpenStack\build\openstack\compute-hyperv
+    pushd $buildDir\compute-hyperv
+    & pip install $buildDir\compute-hyperv
     if ($LastExitCode) { Throw "Failed to install compute-hyperv from repo" }
     popd
 }

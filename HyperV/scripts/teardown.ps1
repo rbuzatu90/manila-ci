@@ -1,8 +1,6 @@
-$baseDir = "c:\OpenStack"
-$buildDir = "$baseDir\build"
-
 $scriptLocation = [System.IO.Path]::GetDirectoryName($myInvocation.MyCommand.Definition)
 . "$scriptLocation\utils.ps1"
+. "$scriptLocation\config.ps1"
 
 $ErrorActionPreference = "SilentlyContinue"
 
