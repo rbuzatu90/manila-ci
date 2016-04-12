@@ -19,8 +19,8 @@ mkdir -p "$TEMPEST_DIR"
 
 # Checkout stable commit for tempest to avoid possible
 # incompatibilities for plugin stored in Manila repo.
-TEMPEST_COMMIT=${TEMPEST_COMMIT:-"047f6b27"} # 28 Jan, 2016
-git checkout $TEMPEST_COMMIT
+export MANILA_TEMPEST_COMMIT="a16bf19e" # 11 Apr, 2016
+git checkout $MANILA_TEMPEST_COMMIT
 
 export OS_TEST_TIMEOUT=2400
 
