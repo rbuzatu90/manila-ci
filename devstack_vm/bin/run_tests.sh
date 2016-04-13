@@ -19,7 +19,13 @@ mkdir -p "$TEMPEST_DIR"
 
 # Checkout stable commit for tempest to avoid possible
 # incompatibilities for plugin stored in Manila repo.
-export MANILA_TEMPEST_COMMIT="a16bf19e" # 11 Apr, 2016
+#automatically get the latest commit
+
+wget --quiet https://raw.githubusercontent.com/openstack/manila/master/contrib/ci/common.sh -O /tmp/manilacommon.sh
+exportcmd=$(grep MANILA_TEMPEST_COMMIT /tmp/manilacommon.sh)
+eval $exportcmd
+rm -f /tmp/manilacommon.sh
+
 git checkout $MANILA_TEMPEST_COMMIT
 
 export OS_TEST_TIMEOUT=2400

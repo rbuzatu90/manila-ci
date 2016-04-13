@@ -8,6 +8,22 @@ set -x
 
 source /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
+#!/bin/bash
+jen_date=$(date +%d/%m/%Y-%H:%M)
+set +e
+
+ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i /home/jenkins-slave/tools/admin-msft.pem ubuntu@$DEVSTACK_FLOATING_IP "mkdir -p /openstack/logs/${hyperv_node%%[.]*}"
+ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i /home/jenkins-slave/tools/admin-msft.pem ubuntu@$DEVSTACK_FLOATING_IP "sudo chown -R nobody:nogroup /openstack/logs"
+ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i /home/jenkins-slave/tools/admin-msft.pem ubuntu@$DEVSTACK_FLOATING_IP "sudo chmod -R 777 /openstack/logs"
+python /home/jenkins-slave/tools/wsman.py -U https://$hyperv_node:5986/wsman -u $WIN_USER -p $WIN_PASS 'powershell -ExecutionPolicy RemoteSigned C:\OpenStack\nova-ci\HyperV\scripts\export-eventlog.ps1'
+python /home/jenkins-slave/tools/wsman.py -U https://$hyperv_node:5986/wsman -u $WIN_USER -p $WIN_PASS 'powershell -ExecutionPolicy RemoteSigned cp -Recurse -Container  C:\OpenStack\Log\Eventlog\* \\'$DEVSTACK_FLOATING_IP'\openstack\logs\'${hyperv_node%%[.]*}'\'
+python /home/jenkins-slave/tools/wsman.py -U https://$hyperv_node:5986/wsman -u $WIN_USER -p $WIN_PASS 'powershell -ExecutionPolicy RemoteSigned Copy-Item -Recurse C:\OpenStack\Log\* \\'$DEVSTACK_FLOATING_IP'\openstack\logs\'${hyperv_node%%[.]*}'\'
+
+if [ "$IS_DEBUG_JOB" != "yes" ] || [ -z '$IS_DEBUG_JOB' ]; then
+	echo "Detaching and cleaning Hyper-V node"
+	python /home/jenkins-slave/tools/wsman.py -U https://$hyperv_node:5986/wsman -u administrator -p H@rd24G3t "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\teardown.ps1"
+fi
+
 if [ -z '$ZUUL_CHANGE' ] || [ -z '$ZUUL_PATCHSET' ]; then
     echo 'Missing parameters!'
     echo "ZUUL_CHANGE=$ZUUL_CHANGE"

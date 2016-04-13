@@ -3,26 +3,9 @@ Param(
     [string]$branchName='master'
 )
 
-$openstackDir = "C:\OpenStack"
-$baseDir = "$openstackDir\manila-ci\HyperV"
-$scriptdir = "$baseDir\scripts"
-$configDir = "C:\OpenStack\etc"
-$templateDir = "$baseDir\templates"
-$buildDir = "c:\OpenStack\build\openstack"
-$binDir = "$openstackDir\bin"
-$novaTemplate = "$templateDir\nova.conf"
-$neutronTemplate = "$templateDir\neutron_hyperv_agent.conf"
-$hostname = hostname
-$rabbitUser = "stackrabbit"
-$pythonDir = "C:\Python27"
-$pythonArchive = "python27new.tar.gz"
-$pythonTar = "python27new.tar"
-$pythonExec = "$pythonDir\python.exe"
-
-$openstackLogs="$openstackDir\Log"
-$remoteConfigs="\\"+$devstackIP+"\openstack\config"
-
-. "$scriptdir\utils.ps1"
+$scriptLocation = [System.IO.Path]::GetDirectoryName($myInvocation.MyCommand.Definition)
+. "$scriptLocation\config.ps1"
+. "$scriptLocation\utils.ps1"
 
 $hasNova = Test-Path $buildDir\nova
 $hasNeutron = Test-Path $buildDir\neutron
@@ -128,8 +111,6 @@ Add-Content "$env:APPDATA\pip\pip.ini" $pip_conf_content
 & pip install -U --pre pymi
 & pip install cffi
 & pip install numpy
-& pip install -U cliff==1.15.0
-& pip install oslo.messaging==4.5.0
 popd
 
 $hasPipConf = Test-Path "$env:APPDATA\pip"
@@ -157,28 +138,29 @@ function cherry_pick($commit) {
 }
 
 ExecRetry {
-    & pip install C:\OpenStack\build\openstack\networking-hyperv
+    pushd $buildDir\networking-hyperv
+    & pip install $buildDir\networking-hyperv 
     if ($LastExitCode) { Throw "Failed to install networking-hyperv from repo" }
     popd
 }
 
 ExecRetry {
-    pushd C:\OpenStack\build\openstack\neutron
-    & pip install C:\OpenStack\build\openstack\neutron
+    pushd $buildDir\neutron
+    & pip install $buildDir\neutron
     if ($LastExitCode) { Throw "Failed to install neutron from repo" }
     popd
 }
 
 ExecRetry {
-    pushd C:\OpenStack\build\openstack\nova
-    # end of cherry-pick
-    & pip install C:\OpenStack\build\openstack\nova
+    pushd $buildDir\nova
+    & pip install $buildDir\nova
     if ($LastExitCode) { Throw "Failed to install nova fom repo" }
     popd
 }
 
 ExecRetry {
-    & pip install C:\OpenStack\build\openstack\compute-hyperv
+    pushd $buildDir\compute-hyperv
+    & pip install $buildDir\compute-hyperv
     if ($LastExitCode) { Throw "Failed to install compute-hyperv from repo" }
     popd
 }
