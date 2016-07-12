@@ -57,7 +57,7 @@ echo "Deploying devstack $NAME"
 date
 
 export VM_ID=$(nova boot --availability-zone manila \
-                         --flavor cinder.linux \
+                         --flavor manila.devstack \
                          --image $devstack_image \
                          --key-name default \
                          --security-groups devstack \
