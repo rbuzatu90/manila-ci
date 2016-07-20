@@ -25,6 +25,7 @@ trusted-host = 10.0.110.1
 
 $ErrorActionPreference = "Stop"
 
+destroy_planned_vms
 
 if ($hasBinDir -eq $false){
     mkdir $binDir
