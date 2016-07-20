@@ -51,6 +51,8 @@ Remove-VM * -Force
 
 Write-Host "Cleaning up iSCSI targets."
 cleanup_iscsi_targets
+Write-Host "Cleaning up planned VMs."
+destroy_planned_vms
 
 Write-Host "Cleaning the build folder."
 Remove-Item -Recurse -Force $buildDir\openstack\*
