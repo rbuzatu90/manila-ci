@@ -3,6 +3,7 @@
 set -x
 
 nova quota-class-update --instances 50 --cores 100 --ram $((51200*4)) --floating-ips 50 --security-groups 50 --security-group-rules 100 default
+neutron quota-update --subnet -1 --network -1 default
 # manila quota-class-update --shares 50 --share-networks 10 --gigabytes 2000 default
 # ERROR: 'Namespace' object has no attribute 'class_name'
 # Manila quota cannot be modified using API
