@@ -56,9 +56,11 @@ echo "Image used is: $devstack_image"
 echo "Deploying devstack $NAME"
 date
 
+MANILA_FLAVOR_ID="733f00aa-f896-458c-9c7e-98098bbfaa23"
+
 #19July/nherciu: temporarily setting availability zone to hyper-v until we have more manila compute nodes available
 export VM_ID=$(nova boot --availability-zone hyper-v \
-                         --flavor manila.devstack \
+                         --flavor $MANILA_FLAVOR_ID \
                          --image $devstack_image \
                          --key-name default \
                          --security-groups devstack \
