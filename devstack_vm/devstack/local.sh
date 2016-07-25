@@ -26,6 +26,7 @@ iniset $TEMPEST_CONFIG identity admin_username admin
 iniset $TEMPEST_CONFIG identity admin_password Passw0rd
 iniset $TEMPEST_CONFIG identity admin_tenant_name admin
 
+iniset $TEMPEST_CONFIG share multitenancy_enabled False
 iniset $TEMPEST_CONFIG share enable_protocols cifs
 iniset $TEMPEST_CONFIG share enable_ip_rules_for_protocols ""
 iniset $TEMPEST_CONFIG share enable_user_rules_for_protocols cifs
