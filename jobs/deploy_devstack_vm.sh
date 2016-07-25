@@ -58,7 +58,7 @@ date
 
 #19July/nherciu: temporarily setting availability zone to hyper-v until we have more manila compute nodes available
 export VM_ID=$(nova boot --availability-zone hyper-v \
-                         --flavor cinder.linux \
+                         --flavor manila.devstack \
                          --image $devstack_image \
                          --key-name default \
                          --security-groups devstack \
