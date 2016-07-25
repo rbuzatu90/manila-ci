@@ -7,7 +7,7 @@ source /home/ubuntu/devstack/functions-common
 
 echo "Updating flavors"
 nova flavor-delete 100
-nova flavor-create manila-service-flavor 100 2048 25 2
+nova flavor-create manila-service-flavor 100 1536 25 2
 
 # Add DNS config to the private network
 echo "Add DNS config to the private network"
@@ -26,7 +26,6 @@ iniset $TEMPEST_CONFIG identity admin_username admin
 iniset $TEMPEST_CONFIG identity admin_password Passw0rd
 iniset $TEMPEST_CONFIG identity admin_tenant_name admin
 
-iniset $TEMPEST_CONFIG share multitenancy_enabled False
 iniset $TEMPEST_CONFIG share enable_protocols cifs
 iniset $TEMPEST_CONFIG share enable_ip_rules_for_protocols ""
 iniset $TEMPEST_CONFIG share enable_user_rules_for_protocols cifs
