@@ -3,13 +3,16 @@
 exec_with_retry2 () {
     local MAX_RETRIES=$1
     local INTERVAL=$2
+    local VERBOSE=$3
 
     local COUNTER=0
     while [ $COUNTER -lt $MAX_RETRIES ]; do
         local EXIT=0
-        echo `date -u +%H:%M:%S`
+        if [ $VERBOSE == 'verbose' ]; then
+            echo `date -u +%H:%M:%S`
+        fi
         # echo "Running: ${@:3}"
-        eval '${@:3}' || EXIT=$?
+        eval '${@:4}' || EXIT=$?
         if [ $EXIT -eq 0 ]; then
             return 0
         fi
@@ -27,7 +30,7 @@ exec_with_retry () {
     local MAX_RETRIES=$1
     local INTERVAL=$2
 
-    exec_with_retry2 $MAX_RETRIES $INTERVAL $CMD
+    exec_with_retry2 $MAX_RETRIES $INTERVAL 'verbose' $CMD
 }
 
 run_wsmancmd_with_retry () {
