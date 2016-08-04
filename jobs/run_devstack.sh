@@ -5,6 +5,7 @@ source /home/jenkins-slave/tools/keystonerc_admin
 
 # Loading functions
 source /usr/local/src/manila-ci/jobs/utils.sh
+source /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
 # Building devstack as a threaded job
 echo `date -u +%H:%M:%S` "Started to build devstack as a threaded job"

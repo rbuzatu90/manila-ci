@@ -5,7 +5,7 @@
 source /usr/local/src/manila-ci/jobs/utils.sh
 
 # Loading parameters
-source /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.txt
+source /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
 # run devstack
 run_ssh_cmd_with_retry ubuntu@$DEVSTACK_FLOATING_IP $DEVSTACK_SSH_KEY "source /home/ubuntu/keystonerc && /home/ubuntu/bin/run_devstack.sh" 5
