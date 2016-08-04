@@ -105,6 +105,10 @@ join_hyperv (){
     run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\create-environment.ps1 -devstackIP $FIXED_IP"
 }
 
+function post_build_restart_hyperv_services (){
+    run_wsmancmd_with_retry $1 $2 $3 '"powershell -ExecutionPolicy RemoteSigned C:\OpenStack\nova-ci\HyperV\scripts\post-build-restart-services.ps1 >>\\'$FIXED_IP'\openstack\logs\create-environment-'$1'.log 2>&1"'
+}
+
 teardown_hyperv () {
     local WIN_USER=$1
     local WIN_PASS=$2

@@ -18,7 +18,7 @@ nohup /usr/local/src/manila-ci/jobs/build_hyperv.sh $hyperv_node > /home/jenkins
 pid_hv=$!
 
 TIME_COUNT=0
-PROC_COUNT=3
+PROC_COUNT=2
 
 echo `date -u +%H:%M:%S` "Start waiting for parallel init jobs."
 
@@ -57,3 +57,6 @@ if [[ $PROC_COUNT -gt 0 ]]; then
     echo "Not all build threads finished in time, initialization process failed."
     exit 1
 fi
+
+
+post_build_restart_hyperv_services $hyperv_node $WIN_USER $WIN_PASS
