@@ -43,9 +43,12 @@ class VlanRanges(object):
             update_ret = self.conn.execute("""update vlanIds set devstack="%s" where id='%s';""" % (name, row['id']))
             if update_ret == 0:
                 self.conn.execute("""rollback;""")
+                print("Could not update VLAN range allocation table.")
             else:
                 self.conn.execute("""COMMIT;""")
                 return "%s:%s" % (row['vlanStart'], row['vlanEnd'])
+        else:
+            print("Could not find an available VLAN range.")
         raise Exception("Failed to get VLAN range for devstack id %s" % devstack)
 
     def release_range(self, devstack):
