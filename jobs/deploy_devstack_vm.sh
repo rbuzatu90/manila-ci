@@ -38,7 +38,6 @@ echo DEVSTACK_SSH_KEY=$DEVSTACK_SSH_KEY >> /home/jenkins-slave/runs/devstack_par
 NET_ID=$(nova net-list | grep 'private' | awk '{print $2}')
 echo NET_ID=$NET_ID >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
-echo DEVSTACK_FLOATING_IP=$DEVSTACK_FLOATING_IP
 echo NAME=$NAME
 echo NET_ID=$NET_ID
 
@@ -106,11 +105,11 @@ done
 echo FIXED_IP=$FIXED_IP >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
 export DEVSTACK_FLOATING_IP=$(nova floating-ip-create public | awk '{print $2}' | sed '/^$/d' | tail -n 1 ) || echo "Failed to allocate floating IP"
+echo DEVSTACK_FLOATING_IP=$DEVSTACK_FLOATING_IP | tee -a /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 if [ -z "$DEVSTACK_FLOATING_IP" ]
 then
     exit 1
 fi
-echo DEVSTACK_FLOATING_IP=$DEVSTACK_FLOATING_IP >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
 exec_with_retry 15 5 "nova floating-ip-associate $VM_ID $DEVSTACK_FLOATING_IP"
 
