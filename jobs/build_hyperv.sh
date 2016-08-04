@@ -5,7 +5,7 @@ hyperv_node=$1
 source /usr/local/src/manila-ci/jobs/utils.sh
 
 # Loading parameters
-source /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.txt
+source /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
 # building HyperV node
 echo $hyperv_node
