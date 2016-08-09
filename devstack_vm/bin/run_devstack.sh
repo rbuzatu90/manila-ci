@@ -104,6 +104,10 @@ cd /home/ubuntu/devstack
 git pull
 
 cd /opt/stack/manila
+# This will log the console output of unavailable share instances.
+git fetch https://git.openstack.org/openstack/manila refs/changes/74/352474/1
+cherry_pick FETCH_HEAD
+
 git config --global user.email "microsoft_manila_ci@microsoft.com"
 git config --global user.name "Microsoft Manila CI"
 
