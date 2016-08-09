@@ -105,8 +105,13 @@ join_hyperv (){
     run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\create-environment.ps1 -devstackIP $FIXED_IP"
 }
 
-post_build_restart_hyperv_services (){
-    run_wsmancmd_with_retry $1 $2 $3 '"powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\post-build-restart-services.ps1"'
+post_build_hyperv (){
+    local WIN_USER=$1
+    local WIN_PASS=$2
+    local URL=$3
+    local WIN_IMG_ID=$4
+    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\prepare_windows_img.ps1 $WIN_IMG_ID"
+    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS '"powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\post-build-restart-services.ps1"'
 }
 
 teardown_hyperv () {

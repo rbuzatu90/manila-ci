@@ -92,6 +92,14 @@ if (Test-Path $pythonDir)
 {
     Remove-Item -Recurse -Force $pythonDir
 }
+if (! Test-Path $windowsImagePath){
+    write-host "Fetching Windows image."
+    Invoke-WebRequest -Uri $windowsImageUrl -OutFile $windowsImagePath
+}
+else {
+    write-host "$windowsImage already exists at $windowsImagePath."
+}
+
 Write-Host "Ensure Python folder is up to date"
 Write-Host "Extracting archive.."
 & "C:\Program Files\7-Zip\7z.exe" x -y "$pythonArchive"
