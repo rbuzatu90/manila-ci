@@ -12,7 +12,7 @@ $scriptLocation = [System.IO.Path]::GetDirectoryName($myInvocation.MyCommand.Def
 
 $baseImageDir = "C:\OpenStack\Instances\_base"
 
-if (! Test-Path $baseImageDir) {
+if (! (Test-Path $baseImageDir)) {
     mkdir $baseImageDir
 }
 

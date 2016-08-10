@@ -92,9 +92,9 @@ if (Test-Path $pythonDir)
 {
     Remove-Item -Recurse -Force $pythonDir
 }
-if (! Test-Path $windowsImagePath){
-    write-host "Fetching Windows image."
-    Invoke-WebRequest -Uri $windowsImageUrl -OutFile $windowsImagePath
+if (! (Test-Path $windowsImagePath)){
+    Write-Host "Fetching Windows image."
+    (New-Object System.Net.WebClient).DownloadFile($windowsImageUrl, $windowsImagePath)
 }
 else {
     write-host "$windowsImage already exists at $windowsImagePath."
