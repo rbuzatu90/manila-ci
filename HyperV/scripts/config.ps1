@@ -25,5 +25,6 @@ $eventlogjspath = "$templateDir\eventlog_js.txt"
 $downloadLocation = "http://10.0.110.1/"
 
 $windowsImage = "ws2012r2.vhdx.gz"
+$windowsImagePathGz = "C:\OpenStack\ws2012r2.vhdx.gz"
 $windowsImagePath = "C:\OpenStack\ws2012r2.vhdx"
 $windowsImageUrl = "$downloadLocation/$windowsImage"
