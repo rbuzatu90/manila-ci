@@ -58,5 +58,11 @@ if [[ $PROC_COUNT -gt 0 ]]; then
     exit 1
 fi
 
+WIN_IMG_ID=$(run_ssh_cmd_with_retry ubuntu@$DEVSTACK_FLOATING_IP $DEVSTACK_SSH_KEY "source /home/ubuntu/keystonerc && glance image-list | grep ws2012r2" | awk '{print $2}')
+echo WIN_IMG_ID=$WIN_IMG_ID
+if [[ -z $WIN_IMG_ID ]]; then
+    echo "Could not get Windows image id."
+    exit 1
+fi
 
-post_build_restart_hyperv_services $hyperv_node $WIN_USER $WIN_PASS
+post_build_hyperv $WIN_USER $WIN_PASS $hyperv_node $WIN_IMG_ID

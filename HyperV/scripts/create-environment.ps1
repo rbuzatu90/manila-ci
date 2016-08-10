@@ -92,6 +92,18 @@ if (Test-Path $pythonDir)
 {
     Remove-Item -Recurse -Force $pythonDir
 }
+if (! (Test-Path $windowsImagePath)){
+    Write-Host "Fetching Windows image."
+    if (! (Test-Path $windowsImagePathGz)) {
+        (New-Object System.Net.WebClient).DownloadFile($windowsImageUrl, $windowsImagePathGz)
+    }
+    & "C:\Program Files\7-Zip\7z.exe" x -y "$windowsImagePathGz"
+    Rename-Item C:\OpenStack\ws2012_r2_kvm_eval.vhdx $windowsImagePath
+}
+else {
+    write-host "$windowsImage already exists at $windowsImagePath."
+}
+
 Write-Host "Ensure Python folder is up to date"
 Write-Host "Extracting archive.."
 & "C:\Program Files\7-Zip\7z.exe" x -y "$pythonArchive"
