@@ -65,4 +65,4 @@ if [[ -z $WIN_IMG_ID ]]; then
     exit 1
 fi
 
-post_build_restart_hyperv_services $WIN_USER $WIN_PASS $hyperv_node $WIN_IMG_ID
+post_build_hyperv $WIN_USER $WIN_PASS $hyperv_node $WIN_IMG_ID
