@@ -139,3 +139,9 @@ function destroy_planned_vms() {
 function log_message($message){
     echo "[$(Get-Date)] $message"
 }
+
+function unarchive(&archive_path, $dest_dir){
+    # This could be updated sometime to atomically handle .tar.gz archives.
+    Write-Host "Unarchiving $archive_path to $dest_dir"
+    & 'C:\Program Files\7-Zip\7z.exe' -o"$dest_dir" x -y "$archive_path"
+}

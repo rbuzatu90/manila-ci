@@ -92,12 +92,18 @@ if (Test-Path $pythonDir)
 {
     Remove-Item -Recurse -Force $pythonDir
 }
-if (! (Test-Path $windowsImagePath)){
+
+# At some point, we were unarchiving the image at an unexpected destination.
+if (Test-Path "C:\ws2012_r2_kvm_eval.vhdx") {
+    Rename-Item "C:\ws2012_r2_kvm_eval.vhdx" $windowsImagePath
+}
+elseif (! (Test-Path $windowsImagePath)){
     Write-Host "Fetching Windows image."
     if (! (Test-Path $windowsImagePathGz)) {
         (New-Object System.Net.WebClient).DownloadFile($windowsImageUrl, $windowsImagePathGz)
     }
-    & "C:\Program Files\7-Zip\7z.exe" x -y "$windowsImagePathGz"
+
+    unarchive $windowsImagePathGz $openstackDir
     Rename-Item C:\OpenStack\ws2012_r2_kvm_eval.vhdx $windowsImagePath
 }
 else {
