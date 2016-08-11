@@ -103,7 +103,21 @@ elseif (! (Get-VHD $windowsImagePath)){
     }
     Write-Host "Fetching Windows image."
     if (! (Test-Path $windowsImagePathGz)) {
-        (New-Object System.Net.WebClient).DownloadFile($windowsImageUrl, $windowsImagePathGz)
+
+        $retrycount = 1
+        $completed = $false
+        while (-not $completed -And $retrycount -lt 5) {
+            Write-Host "Attempt $retrycount to download image file"
+            (New-Object System.Net.WebClient).DownloadFile($windowsImageUrl, $windowsImagePathGz)
+            if ( (Get-FileHash -Algorithm MD5 $windowsImagePathGz).hash -eq "C349E9D14305291033CA30D26ABFE3FE") {
+                Write-Host "Hash matched"
+                $completed = $true
+            }
+            else {
+                $retrycount++
+                Write-Host "Hash mismatched, retrying"
+            }
+        }
     }
 
     unarchive $windowsImagePathGz $openstackDir
