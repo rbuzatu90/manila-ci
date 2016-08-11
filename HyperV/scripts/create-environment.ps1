@@ -97,7 +97,7 @@ if (Test-Path $pythonDir)
 if (Test-Path "C:\ws2012_r2_kvm_eval.vhdx") {
     Rename-Item "C:\ws2012_r2_kvm_eval.vhdx" $windowsImagePath
 }
-elseif (! (Get-VHD $windowsImagePath)){
+elseif (! (Get-VHD $windowsImagePath -ErrorAction SilentlyContinue)){
     if (Test-Path $windowsImagePath) { # in case the vhd exists but it is not valid
         rm $windowsImagePath
     }
