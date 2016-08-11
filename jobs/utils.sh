@@ -96,13 +96,13 @@ join_hyperv (){
     local WIN_PASS=$2
     local URL=$3
 
-    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned Remove-Item -Recurse -Force c:\Openstack\manila-ci"
-    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "git clone -b cambridge https://github.com/cloudbase/manila-ci C:\Openstack\manila-ci"
-    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\teardown.ps1"
+    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS '"powershell -ExecutionPolicy RemoteSigned Remove-Item -Recurse -Force c:\Openstack\manila-ci >>\\'$FIXED_IP'\openstack\logs\create-environment-'$URL'.log 2>&1"'
+    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS '"git clone -b cambridge https://github.com/cloudbase/manila-ci C:\Openstack\manila-ci >>\\'$FIXED_IP'\openstack\logs\create-environment-'$URL'.log 2>&1"'
+    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS 'powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\teardown.ps1' 
     
     set -e
-    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\EnsureOpenStackServices.ps1 $WIN_USER $WIN_PASS"
-    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\create-environment.ps1 -devstackIP $FIXED_IP"
+    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS '"powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\EnsureOpenStackServices.ps1 '$WIN_USER' '$WIN_PASS' >>\\'$FIXED_IP'\openstack\logs\create-environment-'$URL'.log 2>&1"'
+    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS '"powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\create-environment.ps1 -devstackIP '$FIXED_IP' >>\\'$FIXED_IP'\openstack\logs\create-environment-'$URL'.log 2>&1"'
 }
 
 post_build_hyperv (){
