@@ -90,7 +90,8 @@ if (Test-Path $pythonTar)
 }
 if (Test-Path $pythonDir)
 {
-    Remove-Item -Recurse -Force $pythonDir
+    #Remove-Item -Recurse -Force $pythonDir
+    Cmd /C "rmdir /S /Q $pythonDir"
 }
 
 # At some point, we were unarchiving the image at an unexpected destination.
