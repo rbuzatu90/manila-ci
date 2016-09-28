@@ -31,7 +31,7 @@ git checkout $MANILA_TEMPEST_COMMIT
 export OS_TEST_TIMEOUT=2400
 
 # TODO: run consistency group tests after we adapt our driver to support this feature (should be minimal changes)
-testr list-tests | grep "manila_tempest_tests.tests.api" | grep -v consistency_group | grep -v security_services > "$RUN_TESTS_LIST"
+testr list-tests | grep "manila_tempest_tests.tests.api" | grep -v consistency_group | grep -v security_services | grep -v test_mtu_with_neutron | grep -v test_gateway_with_neutron > "$RUN_TESTS_LIST"
 res=$?
 if [ $res -ne 0 ]; then
     echo "failed to generate list of tests"
