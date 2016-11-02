@@ -67,6 +67,9 @@ ExecRetry {
 ExecRetry {
     GitClonePull "$buildDir\compute-hyperv" "https://github.com/openstack/compute-hyperv.git" $branchName
 }
+ExecRetry {
+    GitClonePull "$buildDir\requirements" "https://git.openstack.org/openstack/requirements.git" $branchName
+}
 
 $hasLogDir = Test-Path $openstackLogs
 if ($hasLogDir -eq $false){
@@ -177,34 +180,46 @@ function cherry_pick($commit) {
 }
 
 ExecRetry {
+    pushd "$buildDir\requirements"
+    & pip install -c upper-constraints.txt -U pbr virtualenv httplib2 prettytable>=0.7 setuptools
+    & pip install -c upper-constraints.txt -U .
+    if ($LastExitCode) { Throw "Failed to install openstack/requirements from repo" }
+    popd
+}
+
+ExecRetry {
     pushd $buildDir\networking-hyperv
-    & pip install $buildDir\networking-hyperv 
+    & update-requirements.exe --source $buildDir\requirements .
+    & pip install -c $buildDir\requirements\upper-constraints.txt -U .
     if ($LastExitCode) { Throw "Failed to install networking-hyperv from repo" }
     popd
 }
 
 ExecRetry {
     pushd $buildDir\neutron
-    & pip install $buildDir\neutron
+    & update-requirements.exe --source $buildDir\requirements .
+    & pip install -c $buildDir\requirements\upper-constraints.txt -U .
     if ($LastExitCode) { Throw "Failed to install neutron from repo" }
     popd
 }
 
 ExecRetry {
     pushd $buildDir\nova
+    & update-requirements.exe --source $buildDir\requirements .
     if ($branchName -eq 'master') {
         # This patch fixes os_type image property requirement
         git fetch https://review.openstack.org/openstack/nova refs/changes/26/379326/1
         cherry_pick FETCH_HEAD
     }
-    & pip install $buildDir\nova
+    & pip install -c $buildDir\requirements\upper-constraints.txt -U .
     if ($LastExitCode) { Throw "Failed to install nova fom repo" }
     popd
 }
 
 ExecRetry {
     pushd $buildDir\compute-hyperv
-    & pip install $buildDir\compute-hyperv
+    & update-requirements.exe --source $buildDir\requirements .
+    & pip install -c $buildDir\requirements\upper-constraints.txt -U .
     if ($LastExitCode) { Throw "Failed to install compute-hyperv from repo" }
     popd
 }
