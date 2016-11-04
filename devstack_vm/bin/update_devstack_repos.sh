@@ -70,8 +70,8 @@ done
 
 popd
 
-pushd $BASEDIR/cinder
+#pushd $BASEDIR/cinder
 #temporary fix for multiple volumes to one instance bug
 #https://bugs.launchpad.net/tempest/+bug/1633535
-git revert --no-edit 6f174b412696bfa6262a5bea3ac42f45efbbe2ce
-popd
+#git revert --no-edit 6f174b412696bfa6262a5bea3ac42f45efbbe2ce
+#popd
