@@ -42,5 +42,9 @@ iniset $TEMPEST_CONFIG network public_network_id $public_id
 # router_id=`neutron router-list | grep router | awk '{print $2}'
 # iniset $TEMPEST_CONFIG network public_router_id $router_id
 
+# Add a route for the private network
+router_ip=`neutron router-list | grep router1 | grep -oP '(?<=ip_address": ").*(?=")'`
+sudo ip route replace 172.20.1.0/24 via $router_ip
+
 MANILA_IMAGE_ID=$(glance image-list | grep "ws2012r2" | awk '{print $2}')
 glance image-update $MANILA_IMAGE_ID --visibility public --protected False
