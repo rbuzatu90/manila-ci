@@ -11,7 +11,7 @@ source /usr/local/src/manila-ci/jobs/deploy_devstack_vm.sh
 run_ssh_cmd_with_retry ubuntu@$DEVSTACK_FLOATING_IP $DEVSTACK_SSH_KEY  \
 	"sed -i \"s/\(driver_handles_share_servers\).*/\1 = False/g\" /home/ubuntu/devstack/local.conf"
 run_ssh_cmd_with_retry ubuntu@$DEVSTACK_FLOATING_IP $DEVSTACK_SSH_KEY  \
-    "echo 'iniset /opt/stack/tempest/etc/tempest.conf share multitenancy_enabled False' >> /home/ubuntu/devstack/local.sh"
+    'sed -i "s/iniset \$TEMPEST_CONFIG share build_timeout 2400/iniset \$TEMPEST_CONFIG share build_timeout 2400 \niniset \$TEMPEST_CONFIG share multitenancy_enabled False/g" /home/ubuntu/bin/run_tests.sh'
 
 # Run devstack
 source /usr/local/src/manila-ci/jobs/run_devstack.sh
