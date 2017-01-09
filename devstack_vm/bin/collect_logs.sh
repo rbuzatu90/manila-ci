@@ -132,9 +132,18 @@ function archive_hyperv_logs() {
             mkdir -p "$LOG_DST_HV/$NAME"
             COUNT=$(($COUNT + 1))
 
-            for j in `ls -A "$HYPERV_LOGS/$i"`;
+            for j in `ls -A "$HYPERV_LOGS/$i"`
             do
-                $GZIP -c "$HYPERV_LOGS/$i/$j" > "$LOG_DST_HV/$NAME/$j.gz" || emit_warning "Failed to archive $HYPERV_LOGS/$i/$j"
+                if [ -d "$HYPERV_LOGS/$i/$j" ]
+                then
+                    mkdir -p "$LOG_DST_HV/$NAME/$j"
+                    for k in `ls -A "$HYPERV_LOGS/$i/$j"`
+                    do
+                        $GZIP -c "$HYPERV_LOGS/$i/$j/$k" > "$LOG_DST_HV/$NAME/$j/$k.gz" || emit_warning "Failed to archive $HYPERV_LOGS/$i/$j/$k"
+                    done
+                else
+                    $GZIP -c "$HYPERV_LOGS/$i/$j" > "$LOG_DST_HV/$NAME/$j.gz" || emit_warning "Failed to archive $HYPERV_LOGS/$i/$j"
+                fi
             done
         else
             $GZIP -c "$HYPERV_LOGS/$i" > "$LOG_DST_HV/$i.gz" || emit_warning "Failed to archive $HYPERV_LOGS/$i"
