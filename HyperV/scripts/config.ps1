@@ -22,7 +22,7 @@ $remoteConfigs="\\"+$devstackIP+"\openstack\config"
 $eventlogPath="$openstackLogs\Eventlog"
 $eventlogcsspath = "$templateDir\eventlog_css.txt"
 $eventlogjspath = "$templateDir\eventlog_js.txt"
-$downloadLocation = "http://10.0.110.1/"
+$downloadLocation = "http://10.20.1.14:8008/"
 
 $windowsImage = "ws2012r2.vhdx.gz"
 $windowsImagePathGz = "C:\OpenStack\ws2012r2.vhdx.gz"

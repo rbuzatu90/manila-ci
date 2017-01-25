@@ -5,7 +5,7 @@ source /usr/local/src/manila-ci/jobs/utils.sh
 ensure_branch_supported || exit 0
 
 # Deploy devstack vm
-source /usr/local/src/manila-ci/jobs/deploy_devstack_vm.sh
+/usr/local/src/manila-ci/jobs/deploy_devstack_vm.sh
 
 # Update local.conf
 run_ssh_cmd_with_retry ubuntu@$DEVSTACK_FLOATING_IP $DEVSTACK_SSH_KEY  \
@@ -14,7 +14,7 @@ run_ssh_cmd_with_retry ubuntu@$DEVSTACK_FLOATING_IP $DEVSTACK_SSH_KEY  \
     'sed -i "s/iniset \$TEMPEST_CONFIG share build_timeout 2400/iniset \$TEMPEST_CONFIG share build_timeout 2400 \niniset \$TEMPEST_CONFIG share multitenancy_enabled False/g" /home/ubuntu/bin/run_tests.sh'
 
 # Run devstack
-source /usr/local/src/manila-ci/jobs/run_devstack.sh
+/usr/local/src/manila-ci/jobs/run_devstack.sh
 
 # Create the share server used by manila in this scenario
 run_ssh_cmd_with_retry ubuntu@$DEVSTACK_FLOATING_IP $DEVSTACK_SSH_KEY  \
