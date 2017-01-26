@@ -15,6 +15,12 @@ LOG_DST_HV="$LOG_DST/Hyper-V_logs"
 CONFIG_DST_DEVSTACK="$LOG_DST/devstack_config"
 CONFIG_DST_HV="$LOG_DST/Hyper-V_config"
 
+hyperv_node=$1
+win_user=$2
+win_pass=$3
+is_debug=$4
+
+
 function emit_error() {
     echo "ERROR: $1"
     exit 1
@@ -151,18 +157,29 @@ function archive_hyperv_logs() {
     done
 }
 
-# Clean
-if [[ -z $1 ]] || [[ $1 != "yes" ]]; then
-    echo "no debug case. Param is: $1"
-    pushd /home/ubuntu/devstack
-    ./unstack.sh
-    popd
-else
-    echo "skipped unstack since we activated debug."
-fi
+function get_win_files() {
+    local host=$1
+    local remote_dir=$2
+    local local_dir=$3
+    if [ ! -d "$local_dir" ];then
+        mkdir -p "$local_dir"
+    fi
+    smbclient "//$host/C\$" -c "prompt OFF; cd $remote_dir" -U "$win_user%$win_pass"
+    if [ $? -ne 0 ];then
+        echo "Folder $remote_dir does not exists"
+        return 0
+    fi
+    smbclient "//$host/C\$" -c "prompt OFF; recurse ON; lcd $local_dir; cd $remote_dir; mget *" -U "$win_user%$win_pass"
+}
 
 [ -d "$LOG_DST" ] && rm -rf "$LOG_DST"
 mkdir -p "$LOG_DST"
+
+echo Getting Hyper-V logs
+get_win_files $hyperv_node "\OpenStack\logs" "$LOG_DST_HV/$hyperv_node"
+
+echo Getting Hyper-V configs
+get_win_files $hyperv_node "\OpenStack\etc" "$CONFIG_DST_HV/$hyperv_node"
 
 archive_devstack
 archive_hyperv_configs
@@ -172,5 +189,15 @@ archive_tempest_files
 pushd "$LOG_DST"
 $TAR -czf "$LOG_DST.tar.gz" . || emit_error "Failed to archive aggregate logs"
 popd
+
+# Clean
+if [[ -z $is_debug ]] || [[ $is_debug != "yes" ]]; then
+    echo "no debug case. Param is: $is_debug"
+    pushd /home/ubuntu/devstack
+    ./unstack.sh
+    popd
+else
+    echo "skipped unstack since we activated debug."
+fi
 
 exit 0

@@ -12,11 +12,10 @@ source /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 jen_date=$(date +%d/%m/%Y-%H:%M)
 set +e
 
-ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i /home/jenkins-slave/tools/admin-msft.pem ubuntu@$DEVSTACK_FLOATING_IP "mkdir -p /openstack/logs/${hyperv_node%%[.]*}"
-ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i /home/jenkins-slave/tools/admin-msft.pem ubuntu@$DEVSTACK_FLOATING_IP "sudo chown -R nobody:nogroup /openstack/logs"
-ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i /home/jenkins-slave/tools/admin-msft.pem ubuntu@$DEVSTACK_FLOATING_IP "sudo chmod -R 777 /openstack/logs"
+ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i /home/jenkins-slave/tools/admin-msft.pem ubuntu@$FIXED_IP "mkdir -p /openstack/logs/${hyperv_node%%[.]*}"
+ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i /home/jenkins-slave/tools/admin-msft.pem ubuntu@$FIXED_IP "sudo chown -R nobody:nogroup /openstack/logs"
+ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i /home/jenkins-slave/tools/admin-msft.pem ubuntu@$FIXED_IP "sudo chmod -R 777 /openstack/logs"
 python /home/jenkins-slave/tools/wsman.py -U https://$hyperv_node:5986/wsman -u $WIN_USER -p $WIN_PASS 'powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\export-eventlog.ps1'
-python /home/jenkins-slave/tools/wsman.py -U https://$hyperv_node:5986/wsman -u $WIN_USER -p $WIN_PASS 'powershell -ExecutionPolicy RemoteSigned Copy-Item -Recurse C:\OpenStack\Log\* \\'$DEVSTACK_FLOATING_IP'\openstack\logs\'${hyperv_node%%[.]*}'\'
 
 if [ "$IS_DEBUG_JOB" != "yes" ] || [ -z '$IS_DEBUG_JOB' ]; then
 	echo "Detaching and cleaning Hyper-V node"
@@ -51,22 +50,16 @@ function log_unsupported_branch {
 
 ensure_branch_supported || (log_unsupported_branch && exit 0)
 
-ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $DEVSTACK_SSH_KEY ubuntu@$DEVSTACK_FLOATING_IP "/home/ubuntu/bin/collect_logs.sh $IS_DEBUG_JOB"
+ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $DEVSTACK_SSH_KEY ubuntu@$FIXED_IP "/home/ubuntu/bin/collect_logs.sh $hyperv_node $WIN_USER $WIN_PASS $IS_DEBUG_JOB"
 
 echo "Creating logs destination folder"
 ssh_cmd_logs_sv "if [ ! -d $LOG_ARCHIVE_DIR ]; then mkdir -p $LOG_ARCHIVE_DIR; else rm -rf $LOG_ARCHIVE_DIR/*; fi"
 
 echo "Downloading logs"
-scp -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $DEVSTACK_SSH_KEY ubuntu@$DEVSTACK_FLOATING_IP:/home/ubuntu/aggregate.tar.gz "aggregate-$NAME.tar.gz"
-
-#echo "Before gzip:"
-#ls -lia `dirname $CONSOLE_LOG`
+scp -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $DEVSTACK_SSH_KEY ubuntu@$FIXED_IP:/home/ubuntu/aggregate.tar.gz "aggregate-$NAME.tar.gz"
 
 echo "GZIP:"
 gzip -v9 $CONSOLE_LOG
-
-#echo "After gzip:"
-#ls -lia `dirname $CONSOLE_LOG`
 
 echo "Uploading logs"
 scp -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $LOGS_SSH_KEY "aggregate-$NAME.tar.gz" logs@logs.openstack.tld:$LOG_ARCHIVE_DIR/aggregate-logs.tar.gz

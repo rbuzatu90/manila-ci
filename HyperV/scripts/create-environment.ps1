@@ -76,11 +76,6 @@ if ($hasLogDir -eq $false){
     mkdir $openstackLogs
 }
 
-$hasConfigDir = Test-Path $remoteConfigs\$hostname
-if ($hasConfigDir -eq $false){
-    mkdir $remoteConfigs\$hostname
-}
-
 pushd C:\
 if (Test-Path $pythonArchive)
 {
@@ -256,10 +251,6 @@ $hasNeutronExec = Test-Path "c:\Python27\Scripts\neutron-hyperv-agent.exe"
 if ($hasNeutronExec -eq $false){
     Throw "No neutron exe found"
 }
-
-
-Remove-Item -Recurse -Force "$remoteConfigs\$hostname\*"
-Copy-Item -Recurse $configDir "$remoteConfigs\$hostname"
 
 Write-Host "Starting the services"
 
