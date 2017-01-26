@@ -58,7 +58,8 @@ date
 MANILA_FLAVOR_ID="cfc20ce6-72ca-4d4b-8d36-aadf0d5fc30b"
 
 #19July/nherciu: temporarily setting availability zone to hyper-v until we have more manila compute nodes available
-export VM_ID=$(nova boot --availability-zone nova \
+export VM_ID=$(nova boot --config-drive true \
+                         --availability-zone nova \
                          --flavor devstack.xxl\
                          --image $devstack_image \
                          --key-name default \

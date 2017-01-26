@@ -32,7 +32,7 @@ if ($hasBinDir -eq $false){
 }
 
 if (($hasMkisoFs -eq $false) -or ($hasQemuImg -eq $false)){
-    Invoke-WebRequest -Uri "http://10.20.1.14:8008/openstack_bin.zip" -OutFile "$bindir\openstack_bin.zip"
+    Invoke-WebRequest -Uri "http://10.20.1.14:8080/openstack_bin.zip" -OutFile "$bindir\openstack_bin.zip"
     if (Test-Path "C:\Program Files\7-Zip\7z.exe"){
         pushd $bindir
         & "C:\Program Files\7-Zip\7z.exe" x -y "$bindir\openstack_bin.zip"
@@ -81,7 +81,7 @@ if (Test-Path $pythonArchive)
 {
     Remove-Item -Force $pythonArchive
 }
-Invoke-WebRequest -Uri http://10.20.1.14:8008/python27new.tar.gz -OutFile $pythonArchive
+Invoke-WebRequest -Uri http://10.20.1.14:8080/python27new.tar.gz -OutFile $pythonArchive
 if (Test-Path $pythonTar)
 {
     Remove-Item -Force $pythonTar
