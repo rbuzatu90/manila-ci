@@ -55,13 +55,13 @@ Write-Host "Cleaning up planned VMs."
 destroy_planned_vms
 
 Write-Host "Cleaning the build folder."
-Remove-Item -Recurse -Force $baseDir\build\*
+Remove-Item -Recurse -Force $openstackDir\build\*
 Write-Host "Cleaning the logs folder."
-Remove-Item -Recurse -Force $baseDir\Logs\*
+Remove-Item -Recurse -Force $openstackDir\Logs\*
 Write-Host "Cleaning the config folder."
-Remove-Item -Recurse -Force $baseDir\etc\*
+Remove-Item -Recurse -Force $openstackDir\etc\*
 Write-Host "Cleaning the Instances folder."
-Remove-Item -Recurse -Force $baseDir\Instances\*
+Remove-Item -Recurse -Force $openstackDir\Instances\*
 Write-Host "Cleaning eventlog"
 cleareventlog
 Write-Host "Cleaning up process finished."
