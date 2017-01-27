@@ -16,6 +16,8 @@ $hasBinDir = Test-Path $binDir
 $hasMkisoFs = Test-Path $binDir\mkisofs.exe
 $hasQemuImg = Test-Path $binDir\qemu-img.exe
 
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+
 $pip_conf_content = @"
 [global]
 index-url = http://10.20.1.8:8080/cloudbase/CI/+simple/
@@ -32,15 +34,11 @@ if ($hasBinDir -eq $false){
 }
 
 if (($hasMkisoFs -eq $false) -or ($hasQemuImg -eq $false)){
-    Invoke-WebRequest -Uri "http://10.20.1.14:8080/openstack_bin.zip" -OutFile "$bindir\openstack_bin.zip"
-    if (Test-Path "C:\Program Files\7-Zip\7z.exe"){
-        pushd $bindir
-        & "C:\Program Files\7-Zip\7z.exe" x -y "$bindir\openstack_bin.zip"
+        Invoke-WebRequest -Uri "http://10.20.1.14:8080/openstack_bin.zip" -OutFile "$bindir\openstack_bin.zip"
+        [System.IO.Compression.ZipFile]::ExtractToDirectory("$bindir\openstack_bin.zip", "$bindir")
         Remove-Item -Force "$bindir\openstack_bin.zip"
-        popd
     } else {
         Throw "Required binary files (mkisofs, qemuimg etc.)  are missing"
-    }
 }
 
 if ($hasNovaTemplate -eq $false){
@@ -81,11 +79,7 @@ if (Test-Path $pythonArchive)
 {
     Remove-Item -Force $pythonArchive
 }
-Invoke-WebRequest -Uri http://10.20.1.14:8080/python27new.tar.gz -OutFile $pythonArchive
-if (Test-Path $pythonTar)
-{
-    Remove-Item -Force $pythonTar
-}
+Invoke-WebRequest -Uri http://10.20.1.14:8080/python.zip -OutFile $pythonArchive
 if (Test-Path $pythonDir)
 {
     #Remove-Item -Recurse -Force $pythonDir
@@ -119,7 +113,7 @@ elseif (! (Get-VHD $windowsImagePath -ErrorAction SilentlyContinue)){
         }
     }
 
-    unarchive $windowsImagePathGz $openstackDir
+    [System.IO.Compression.ZipFile]::ExtractToDirectory($windowsImagePathGz, $openstackDir)
     Rename-Item C:\OpenStack\ws2012_r2_kvm_eval.vhdx $windowsImagePath
 }
 else {
@@ -128,8 +122,7 @@ else {
 
 Write-Host "Ensure Python folder is up to date"
 Write-Host "Extracting archive.."
-& "C:\Program Files\7-Zip\7z.exe" x -y "$pythonArchive"
-& "C:\Program Files\7-Zip\7z.exe" x -y "$pythonTar"
+[System.IO.Compression.ZipFile]::ExtractToDirectory("C:\$pythonArchive", "C:\")
 
 $hasPipConf = Test-Path "$env:APPDATA\pip"
 if ($hasPipConf -eq $false){
