@@ -24,7 +24,7 @@ if [ $result_init -eq 0 ]; then
 fi
 
 jen_date=$(date +%d/%m/%Y-%H:%M)
-/usr/local/src/manila-ci/jobs/run_collect.sh 2>&1
+/usr/local/src/manila-ci/jobs/collect_logs.sh 2>&1
 result_collect=$?
 echo "Collect logs job finished with exit code $result_collect"
 
