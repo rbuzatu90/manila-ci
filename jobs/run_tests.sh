@@ -1,5 +1,5 @@
 #!/bin/bash
-
+source /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 source /usr/local/src/manila-ci/jobs/utils.sh
 ensure_branch_supported || exit 0
 
