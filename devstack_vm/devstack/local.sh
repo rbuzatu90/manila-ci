@@ -20,3 +20,7 @@ sudo ip route replace 172.20.1.0/24 via $router_ip
 
 MANILA_IMAGE_ID=$(glance image-list | grep "ws2012r2" | awk '{print $2}')
 glance image-update $MANILA_IMAGE_ID --visibility public --protected False
+
+SHARE_TYPE_EXTRA_SPECS="snapshot_support=True create_share_from_snapshot_support=True"
+manila type-key default set $SHARE_TYPE_EXTRA_SPECS
+manila share-group-type-key default set $SHARE_TYPE_EXTRA_SPECS
