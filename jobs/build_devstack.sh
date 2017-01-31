@@ -16,7 +16,7 @@ if [ $? -ne 0 ]
 fi
 
 # run post_stack
-run_ssh_cmd_with_retry ubuntu@$FIXED_IP  $DEVSTACK_SSH_KEY "source /home/ubuntu/keystonerc && /home/ubuntu/bin/post_stack.sh" 5
+run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY "source /home/ubuntu/keystonerc && /home/ubuntu/bin/post_stack.sh" 5
 if [ $? -ne 0 ]
 then
     echo "Failed post_stack!"
