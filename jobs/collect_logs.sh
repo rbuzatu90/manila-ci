@@ -12,7 +12,7 @@ source /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 jen_date=$(date +%d/%m/%Y-%H:%M)
 set +e
 
-ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i /home/jenkins-slave/tools/admin-msft.pem ubuntu@$FIXED_IP "mkdir -p /openstack/logs/${hyperv_node%%[.]*}"
+ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i /home/jenkins-slave/tools/admin-msft.pem ubuntu@$FIXED_IP "mkdir -p /openstack/logs/$hyperv_node"
 ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i /home/jenkins-slave/tools/admin-msft.pem ubuntu@$FIXED_IP "sudo chown -R nobody:nogroup /openstack/logs"
 ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i /home/jenkins-slave/tools/admin-msft.pem ubuntu@$FIXED_IP "sudo chmod -R 777 /openstack/logs"
 python /home/jenkins-slave/tools/wsman.py -U https://$hyperv_node:5986/wsman -u $WIN_USER -p $WIN_PASS 'powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\export-eventlog.ps1'
@@ -60,10 +60,18 @@ scp -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $DEVSTACK
 
 echo "GZIP:"
 gzip -v9 $CONSOLE_LOG
+gzip -v9 /home/jenkins-slave/logs/hyperv-build-log-$ZUUL_UUID.log
+gzip -v9 /home/jenkins-slave/logs/devstack-build-log-$ZUUL_UUID.log
 
 echo "Uploading logs"
 scp -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $LOGS_SSH_KEY "aggregate-$NAME.tar.gz" logs@logs.openstack.tld:$LOG_ARCHIVE_DIR/aggregate-logs.tar.gz
 scp -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $LOGS_SSH_KEY $CONSOLE_LOG.gz logs@logs.openstack.tld:$LOG_ARCHIVE_DIR/console.log.gz && rm -f $CONSOLE_LOG*
+scp -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $LOGS_SSH_KEY /home/jenkins-slave/logs/devstack-build-log-$ZUUL_UUID.log.gz \
+    logs@logs.openstack.tld:$LOG_ARCHIVE_DIR/devstack-build-log.log.gz
+scp -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $LOGS_SSH_KEY /home/jenkins-slave/logs/hyperv-build-log-$ZUUL_UUID.log.gz \
+    logs@logs.openstack.tld:$LOG_ARCHIVE_DIR/hyperv-build-log.log.gz
+
+
 
 echo "Extracting logs"
 ssh_cmd_logs_sv "tar -xzf $LOG_ARCHIVE_DIR/aggregate-logs.tar.gz -C $LOG_ARCHIVE_DIR"
