@@ -71,7 +71,8 @@ scp -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $LOGS_SSH
 scp -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $LOGS_SSH_KEY /home/jenkins-slave/logs/hyperv-build-log-$ZUUL_UUID.log.gz \
     logs@logs.openstack.tld:$LOG_ARCHIVE_DIR/hyperv-build-log.log.gz
 
-
+rm /home/jenkins-slave/logs/hyperv-build-log-$ZUUL_UUID.log.gz
+rm /home/jenkins-slave/logs/devstack-build-log-$ZUUL_UUID.log.gz
 
 echo "Extracting logs"
 ssh_cmd_logs_sv "tar -xzf $LOG_ARCHIVE_DIR/aggregate-logs.tar.gz -C $LOG_ARCHIVE_DIR"
