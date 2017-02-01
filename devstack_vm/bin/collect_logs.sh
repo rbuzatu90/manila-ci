@@ -12,6 +12,7 @@ HYPERV_LOGS="/openstack/logs"
 LOG_DST="/home/ubuntu/aggregate"
 LOG_DST_DEVSTACK="$LOG_DST/devstack_logs"
 LOG_DST_HV="$LOG_DST/Hyper-V_logs"
+LOG_DST_TEMPEST="$LOG_DST/tempest"
 CONFIG_DST_DEVSTACK="$LOG_DST/devstack_config"
 CONFIG_DST_HV="$LOG_DST/Hyper-V_config"
 
@@ -35,6 +36,11 @@ function archive_devstack() {
     if [ ! -d "$LOG_DST_DEVSTACK" ]
     then
         mkdir -p "$LOG_DST_DEVSTACK" || emit_error "L30: Failed to create $LOG_DST_DEVSTACK"
+    fi
+
+    if [ ! -d "$LOG_DST_TEMPEST" ]
+    then
+        mkdir -p "$LOG_DST_TEMPEST" || emit_error "L30: Failed to create $LOG_DST_TEMPEST"
     fi
 
     for i in `ls -A $DEVSTACK_LOGS`
@@ -67,6 +73,7 @@ function archive_devstack() {
     #$GZIP -c /home/ubuntu/devstack/localrc > "$CONFIG_DST_DEVSTACK/localrc.txt.gz"
     $GZIP -c /home/ubuntu/devstack/local.conf > "$CONFIG_DST_DEVSTACK/local.conf.gz"
     $GZIP -c /opt/stack/tempest/etc/tempest.conf > "$CONFIG_DST_DEVSTACK/tempest.conf.gz"
+    $GZIP -c /opt/stack/tempest/tempest.log > "$LOG_DST_TEMPEST/tempest.log.gz"
     df -h > "$CONFIG_DST_DEVSTACK/df.txt" 2>&1 && $GZIP "$CONFIG_DST_DEVSTACK/df.txt"
     iptables-save > "$CONFIG_DST_DEVSTACK/iptables.txt" 2>&1 && $GZIP "$CONFIG_DST_DEVSTACK/iptables.txt"
     dpkg-query -l > "$CONFIG_DST_DEVSTACK/dpkg-l.txt" 2>&1 && $GZIP "$CONFIG_DST_DEVSTACK/dpkg-l.txt"
@@ -80,7 +87,7 @@ function archive_devstack() {
 function archive_tempest_files() {
     for i in `ls -A $TEMPEST_LOGS`
     do
-        $GZIP "$TEMPEST_LOGS/$i" -c > "$LOG_DST/$i.gz" || emit_error "Failed to archive tempest logs"
+        $GZIP "$TEMPEST_LOGS/$i" -c > "$LOG_DST_TEMPEST/$i.gz" || emit_error "Failed to archive tempest logs"
     done
 }
 

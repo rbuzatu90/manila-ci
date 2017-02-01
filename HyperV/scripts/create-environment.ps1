@@ -243,6 +243,9 @@ if ($hasNeutronExec -eq $false){
     Throw "No neutron exe found"
 }
 
+# this file is used by oslo reports section in nova.conf
+echo $null >> C:\OpenStack\gmr_manila_trigger
+
 Write-Host "Starting the services"
 
 Write-Host "Starting nova-compute service"
