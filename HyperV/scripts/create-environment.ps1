@@ -52,7 +52,7 @@ git config --global user.name "Hyper-V CI"
 
 
 ExecRetry {
-        GitClonePull "$buildDir\nova" "https://github.com/openstack/nova.git" $branchName
+    GitClonePull "$buildDir\nova" "https://github.com/openstack/nova.git" $branchName
 }
 ExecRetry {
     GitClonePull "$buildDir\neutron" "https://github.com/openstack/neutron.git" $branchName
@@ -65,6 +65,9 @@ ExecRetry {
 }
 ExecRetry {
     GitClonePull "$buildDir\requirements" "https://git.openstack.org/openstack/requirements.git" $branchName
+}
+ExecRetry {
+    GitClonePull "$buildDir\os-win" "https://git.openstack.org/openstack/os-win.git" $branchName
 }
 
 $hasLogDir = Test-Path $openstackLogs
@@ -209,6 +212,18 @@ ExecRetry {
     if ($LastExitCode) { Throw "Failed to install compute-hyperv from repo" }
     popd
 }
+
+ExecRetry {
+    pushd "$buildDir\os-win"
+    & update-requirements.exe --source $buildDir\requirements .
+    Write-Host "Installing OpenStack/os-win..."
+    git fetch git://git.openstack.org/openstack/os-win refs/changes/92/427692/1
+    cherry_pick FETCH_HEAD
+    & pip install -c $buildDir\requirements\upper-constraints.txt -U .    
+    if ($LastExitCode) { Throw "Failed to install openstack/os-win from repo" }
+    popd
+}
+
 
 $cpu_array = ([array](gwmi -class Win32_Processor))
 $cores_count = $cpu_array.count * $cpu_array[0].NumberOfCores
