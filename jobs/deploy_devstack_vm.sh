@@ -162,7 +162,8 @@ ZUUL_SITE=`echo "$ZUUL_URL" |sed 's/.\{2\}$//'`
 echo ZUUL_SITE=$ZUUL_SITE >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
 # creating manila folder and cloning master
-run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY "git clone git://git.openstack.org/openstack/manila.git /opt/stack/manila"
+# this step is not needed since it`s done in update_devstack_repos.sh
+#run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY "git clone git://git.openstack.org/openstack/manila.git /opt/stack/manila"
 
 echo "Run gerrit-git-prep on devstack"
 run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY  "/home/ubuntu/bin/gerrit-git-prep.sh --zuul-site $ZUUL_SITE --gerrit-site $ZUUL_SITE --zuul-ref $ZUUL_REF --zuul-change $ZUUL_CHANGE --zuul-project $ZUUL_PROJECT" 1
