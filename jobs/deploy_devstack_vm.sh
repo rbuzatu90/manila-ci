@@ -64,6 +64,7 @@ export VM_ID=$(nova boot --config-drive true \
                          --image $devstack_image \
                          --key-name default \
                          --security-groups devstack \
+                         --nic net-id="$NET_ID" \
                          --nic net-id="$NET_ID" "$NAME" --poll | \
                grep -w id | awk '{print $4}')
 
@@ -110,10 +111,6 @@ nova show "$VM_ID"
 echo "Wait for answer on port 22 on devstack"
 wait_for_listening_port $FIXED_IP 22 30 || { nova console-log "$VM_ID" ; exit 1; }
 sleep 5
-
-# Add 1 more interface after successful SSH
-echo "Adding two more network interfaces to devstack VM"
-nova interface-attach --net-id "$NET_ID" "$VM_ID" || emit_error "Failed to attach interface"
 
 echo "Copy scripts to devstack VM"
 scp -v -r -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" -i $DEVSTACK_SSH_KEY /usr/local/src/manila-ci/devstack_vm/* ubuntu@$FIXED_IP:/home/ubuntu/

@@ -43,6 +43,7 @@ sudo sh -c "echo '* * * * * root echo 3 > /proc/sys/vm/drop_caches' >> /etc/cron
 set -x
 set -e
 sudo ifconfig eth1 promisc up
+sudo ip -f inet r replace default via 10.250.0.1 dev eth0
 
 HOSTNAME=$(hostname)
 
