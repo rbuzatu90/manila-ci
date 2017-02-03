@@ -83,7 +83,7 @@ echo VM_ID=$VM_ID >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.
 echo VM_ID=$VM_ID
 
 echo "Fetching devstack VM fixed IP address"
-export FIXED_IP=$(nova show "$VM_ID" | grep "private network" | awk '{print $5}')
+export FIXED_IP=$(nova show "$VM_ID" | grep "private network" | awk '{print $5}' | cut -d"," -f1)
 
 COUNT=0
 while [ -z "$FIXED_IP" ]
@@ -100,7 +100,7 @@ do
         exit 1
     fi
     sleep 15
-    export FIXED_IP=$(nova show $VM_ID | grep "private network" | awk '{print $5}')
+    export FIXED_IP=$(nova show "$VM_ID" | grep "private network" | awk '{print $5}' | cut -d"," -f1)
     COUNT=$(($COUNT + 1))
 done
 
