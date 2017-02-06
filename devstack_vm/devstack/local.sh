@@ -7,7 +7,7 @@ source /home/ubuntu/devstack/functions-common
 
 echo "Updating flavors"
 nova flavor-delete 100
-nova flavor-create manila-service-flavor 100 1536 25 2
+nova flavor-create manila-service-flavor 100 4096 25 2
 
 # Add DNS config to the private network
 echo "Add DNS config to the private network"
