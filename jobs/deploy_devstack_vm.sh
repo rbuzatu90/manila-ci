@@ -125,6 +125,7 @@ fi
 # Disable offloating on eth0
 echo "Disabling offloading on eth0"
 set +e
+run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY "sudo ip -f inet r replace default via 10.250.0.1 dev eth0" 3
 run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY "sudo ethtool --offload eth0 rx off tx off" 3
 run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY "sudo ethtool -K eth0 gso off" 3
 run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY "sudo ethtool -K eth0 gro off" 3
