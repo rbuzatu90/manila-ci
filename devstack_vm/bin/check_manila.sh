@@ -3,7 +3,7 @@
 source /home/ubuntu/keystonerc
 
 MAX_RETRIES=${1:-60}
-RETRY_INTERVAL=${2:-10}
+RETRY_INTERVAL=${2:-20}
 TIMEOUT=$((MAX_RETRIES * RETRY_INTERVAL))
 
 TRIES=0

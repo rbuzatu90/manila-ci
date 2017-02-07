@@ -13,7 +13,7 @@ source /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY  \
 	"sed -i \"s/\(driver_handles_share_servers\).*/\1 = False/g\" /home/ubuntu/devstack/local.conf"
 run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY  \
-    'sed -i "s/iniset \$TEMPEST_CONFIG share build_timeout 900/iniset \$TEMPEST_CONFIG share build_timeout 900 \niniset \$TEMPEST_CONFIG share multitenancy_enabled False/g" /home/ubuntu/bin/run_tests.sh'
+    'sed -i "s/iniset \$TEMPEST_CONFIG share build_timeout 2400/iniset \$TEMPEST_CONFIG share build_timeout 2400 \niniset \$TEMPEST_CONFIG share multitenancy_enabled False/g" /home/ubuntu/bin/run_tests.sh'
 
 # Run devstack
 /usr/local/src/manila-ci/jobs/run_devstack.sh

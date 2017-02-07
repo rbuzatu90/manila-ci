@@ -21,7 +21,7 @@ iniset $TEMPEST_CONFIG share storage_protocol CIFS
 iniset $TEMPEST_CONFIG share image_with_share_tools ws2012r2
 iniset $TEMPEST_CONFIG share image_username Admin
 iniset $TEMPEST_CONFIG share client_vm_flavor_ref 100
-iniset $TEMPEST_CONFIG share build_timeout 900
+iniset $TEMPEST_CONFIG share build_timeout 2400
 iniset $TEMPEST_CONFIG share suppress_errors_in_cleanup True
 
 public_id=`neutron net-list | grep public | awk '{print $2}'`
@@ -55,7 +55,7 @@ rm -f /tmp/manilacommon.sh
 
 git checkout $MANILA_TEMPEST_COMMIT
 
-export OS_TEST_TIMEOUT=900
+export OS_TEST_TIMEOUT=2400
 
 # TODO: run consistency group tests after we adapt our driver to support this feature (should be minimal changes)
 testr list-tests | grep "manila_tempest_tests.tests.api" | grep -v consistency_group | grep -v security_services | grep -v test_mtu_with_neutron | grep -v test_gateway_with_neutron > "$RUN_TESTS_LIST"
