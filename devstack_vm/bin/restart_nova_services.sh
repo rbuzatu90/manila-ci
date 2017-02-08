@@ -13,4 +13,5 @@ source $TOP_DIR/lib/infra
 source $TOP_DIR/lib/keystone
 source $TOP_DIR/lib/nova
 stop_nova_rest
+start_nova_api
 start_nova_rest
