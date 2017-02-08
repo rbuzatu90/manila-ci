@@ -23,4 +23,7 @@ glance image-update $MANILA_IMAGE_ID --visibility public --protected False
 
 SHARE_TYPE_EXTRA_SPECS="snapshot_support=True create_share_from_snapshot_support=True"
 manila type-key default set $SHARE_TYPE_EXTRA_SPECS
-manila share-group-type-key default set $SHARE_TYPE_EXTRA_SPECS
+# Disable share groups APIs by default as of Ocata because feature has not been completed.
+# Revert this change back in Pike.
+# https://review.openstack.org/#/c/428840/
+#manila share-group-type-key default set $SHARE_TYPE_EXTRA_SPECS
