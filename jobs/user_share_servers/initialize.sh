@@ -26,6 +26,9 @@ if [ "$ZUUL_BRANCH" == "master" ]; then
         "url=\$(grep transport_url /etc/nova/nova-dhcpbridge.conf | awk '{print \$3}'); nova-manage cell_v2 simple_cell_setup --transport-url \$url >> /opt/stack/logs/screen/create_cell.log"
 fi
 
+# restart nova services to refresh cached cells (manila-share will not find the windows VM otherwise)
+run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY "/home/ubuntu/bin/restart_nova_services.sh" 
+
 # Create the share server used by manila in this scenario
 run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY  \
     "source /home/ubuntu/keystonerc && /home/ubuntu/bin/create_share_server.sh" 6
