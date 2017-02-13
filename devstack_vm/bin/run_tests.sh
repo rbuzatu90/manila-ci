@@ -49,10 +49,8 @@ mkdir -p "$TEMPEST_DIR"
 # incompatibilities for plugin stored in Manila repo.
 #automatically get the latest commit
 
-wget --quiet https://raw.githubusercontent.com/openstack/manila/master/contrib/ci/common.sh -O /tmp/manilacommon.sh
-exportcmd=$(grep MANILA_TEMPEST_COMMIT /tmp/manilacommon.sh)
+exportcmd=$(grep MANILA_TEMPEST_COMMIT /opt/stack/manila/contrib/ci/common.sh)
 eval $exportcmd
-rm -f /tmp/manilacommon.sh
 
 git checkout $MANILA_TEMPEST_COMMIT
 
