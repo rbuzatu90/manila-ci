@@ -16,10 +16,16 @@ nova --os-username manila --os-tenant-name service --os-password Passw0rd \
 nova --os-username manila --os-tenant-name service --os-password Passw0rd \
     secgroup-add-rule $MANILA_SERVICE_SECGROUP udp 1 65535 0.0.0.0/0
 
-nova --os-username manila --os-tenant-name service --os-password Passw0rd \
-     boot ws2012r2 --image=ws2012r2 \
-                   --flavor=100 \
-                   --nic net-id=$NET_ID \
-                   --user-data=/home/ubuntu/ssl/winrm_client_cert.pem \
-                   --security-groups $MANILA_SERVICE_SECGROUP \
-                   --poll
+VM_OK=1
+RETRIES=5
+while [ $VM_OK -ne 0 ] && [ $RETRIES -ne 0 ]; do
+    nova --os-username manila --os-tenant-name service --os-password Passw0rd \
+        boot ws2012r2 --image=ws2012r2 \
+                      --flavor=100 \
+                      --nic net-id=$NET_ID \
+                      --user-data=/home/ubuntu/ssl/winrm_client_cert.pem \
+                      --security-groups $MANILA_SERVICE_SECGROUP
+    VM_OK=$?
+    RETRIES=$(( $RETRIES -1 ))
+done
+
