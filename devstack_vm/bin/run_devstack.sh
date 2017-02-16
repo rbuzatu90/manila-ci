@@ -1,42 +1,8 @@
 #!/bin/bash
 
-rotate_log () {
-    local file="$1"
-    local limit="$2"
-    #We set $new_file as $file without extension 
-    local new_file="${file//.txt/}"
-    if [ -f $file ] ; then
-        if [[ -f ${new_file}.${limit}.txt ]] ; then
-            rm ${new_file}.${limit}.txt
-        fi
-
-        for (( CNT=$limit; CNT > 1; CNT-- )) ; do
-            if [[ -f ${new_file}.$(($CNT-1)).txt ]]; then
-                echo ${new_file}.$(($CNT-1)).txt
-                mv ${new_file}.$(($CNT-1)).txt ${new_file}.${CNT}.txt || echo "Failed to run: mv ${new_file}.$(($CNT-1)).txt ${new_file}.${CNT}.txt"
-            fi
-        done
-
-        # Renames current log to .1.txt
-        mv $file ${new_file}.1.txt
-        touch $file
-    fi
-}
-
-
-function cherry_pick {
-    commit=$1
-    set +e
-    git cherry-pick $commit
-
-    if [ $? -ne 0 ]
-    then
-        echo "Ignoring failed git cherry-pick $commit"
-        git checkout --force
-    fi
-
-    set -e
-}
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+. $DIR/config.sh
+. $DIR/utils.sh
 
 sudo sh -c "echo '* * * * * root echo 3 > /proc/sys/vm/drop_caches' >> /etc/crontab"
 
@@ -104,11 +70,11 @@ git config --global user.name "Microsoft Manila CI"
 
 cd /opt/stack/manila
 # This will log the console output of unavailable share instances.
-git fetch git://git.openstack.org/openstack/manila refs/changes/74/352474/1
+git_timed fetch git://git.openstack.org/openstack/manila refs/changes/74/352474/1
 cherry_pick FETCH_HEAD
 
 # [WIP] Fix Windows SMB helper
-git fetch git://git.openstack.org/openstack/manila refs/changes/12/424112/2
+git_timed fetch git://git.openstack.org/openstack/manila refs/changes/12/424112/2
 cherry_pick FETCH_HEAD
 
 cd /home/ubuntu/devstack
