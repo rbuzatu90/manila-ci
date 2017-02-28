@@ -17,11 +17,6 @@ ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i /home/jen
 ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i /home/jenkins-slave/tools/admin-msft.pem ubuntu@$FIXED_IP "sudo chmod -R 777 /openstack/logs"
 python /home/jenkins-slave/tools/wsman.py -U https://$hyperv_node:5986/wsman -u $WIN_USER -p $WIN_PASS 'powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\export-eventlog.ps1'
 
-if [ "$IS_DEBUG_JOB" != "yes" ] || [ -z '$IS_DEBUG_JOB' ]; then
-	echo "Detaching and cleaning Hyper-V node"
-	python /home/jenkins-slave/tools/wsman.py -U https://$hyperv_node:5986/wsman -u administrator -p H@rd24G3t "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\teardown.ps1"
-fi
-
 if [ -z '$ZUUL_CHANGE' ] || [ -z '$ZUUL_PATCHSET' ]; then
     echo 'Missing parameters!'
     echo "ZUUL_CHANGE=$ZUUL_CHANGE"
@@ -79,6 +74,11 @@ ssh_cmd_logs_sv "tar -xzf $LOG_ARCHIVE_DIR/aggregate-logs.tar.gz -C $LOG_ARCHIVE
 
 echo "Fixing permissions on all log files"
 ssh_cmd_logs_sv "chmod a+rx -R $LOG_ARCHIVE_DIR"
+
+if [ "$IS_DEBUG_JOB" != "yes" ] || [ -z '$IS_DEBUG_JOB' ]; then
+	echo "Detaching and cleaning Hyper-V node"
+	python /home/jenkins-slave/tools/wsman.py -U https://$hyperv_node:5986/wsman -u administrator -p H@rd24G3t "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\teardown.ps1"
+fi
 
 echo `date -u +%H:%M:%S`
 set +x
