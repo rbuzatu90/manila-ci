@@ -195,11 +195,6 @@ ExecRetry {
 ExecRetry {
     pushd $buildDir\nova
     & update-requirements.exe --source $buildDir\requirements .
-    if ($branchName -eq 'master') {
-        # This patch fixes os_type image property requirement
-        git fetch https://review.openstack.org/openstack/nova refs/changes/26/379326/1
-        cherry_pick FETCH_HEAD
-    }
     & pip install -c $buildDir\requirements\upper-constraints.txt -U .
     if ($LastExitCode) { Throw "Failed to install nova fom repo" }
     popd
