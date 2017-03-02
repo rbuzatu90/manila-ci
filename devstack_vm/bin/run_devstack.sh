@@ -107,10 +107,6 @@ cd /opt/stack/manila
 git fetch git://git.openstack.org/openstack/manila refs/changes/74/352474/1
 cherry_pick FETCH_HEAD
 
-# [WIP] Fix Windows SMB helper
-git fetch git://git.openstack.org/openstack/manila refs/changes/12/424112/2
-cherry_pick FETCH_HEAD
-
 cd /home/ubuntu/devstack
 
 ./unstack.sh
